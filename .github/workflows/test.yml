@@ -10,6 +10,10 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Check env
-        run: env
+      - uses: actions/checkout@v3
+      - name: Mint GHA JWT
+        run: |
+          OIDC_TOKEN=$(curl -sLS "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=taras-test" -H "User-Agent: actions/oidc-client" -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN")
+          JWT=$(echo $OIDC_TOKEN | jq -j '.value')
+          echo "${JWT}"
+
